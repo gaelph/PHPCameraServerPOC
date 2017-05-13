@@ -1,0 +1,5 @@
+services:
+    app.token_listener:
+        class: AppBundle\EventListener\TokenListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }

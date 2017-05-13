@@ -1,0 +1,11 @@
+NelmioApiDocBundle:
+  resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+  prefix:   /api/doc
+
+users:
+    type:     rest
+    resource: AppBundle\Controller\UsersController
+
+photos:
+    type:   rest
+    resource: Appbundle\Controller\PhotoController
