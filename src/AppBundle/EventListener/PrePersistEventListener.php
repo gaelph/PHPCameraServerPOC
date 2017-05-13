@@ -8,11 +8,11 @@
 
 namespace AppBundle\EventListener;
 
-use Doctrine\ORM\Event\PreFlushEventArgs;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 
 class PrePersistEventListener
 {
-    function onPrePersist(PreFlushEventArgs $eventArgs) {
+    function onPrePersist(LifecycleEventArgs $eventArgs) {
 
     }
 }
