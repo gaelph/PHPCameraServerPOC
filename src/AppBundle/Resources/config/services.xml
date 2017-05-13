@@ -24,16 +24,8 @@
             <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" />
         </service>
 
-        <service id="app.pre_persist_listener" class="AppBundle\EventListener\PrePersistEventListener">
-            <tag name="doctrine.event_listener" event="prePersist" method="onPrePersist" />
-        </service>
-
-        <service id="app.pre_update_listener" class="AppBundle\EventListener\PreUpdateEventListener">
-            <tag name="doctrine.event_listener" event="preUpdate" method="onPreUpdate" />
-        </service>
-
-        <service id="app.pre_remove_listener" class="AppBundle\EventListener\PreRemoveEventListener">
-            <tag name="doctrine.event_listener" event="preRemove" method="onPreRemove" />
+        <service id="app.on_flush_listener" class="AppBundle\EventListener\OnFlushListener">
+            <tag name="doctrine.event_listener" event="onFlush" method="onFlush" />
         </service>
     </services>
 </container>
