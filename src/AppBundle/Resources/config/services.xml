@@ -24,16 +24,19 @@
             <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" />
         </service>
 
-        <service id="app.pre_persist_listener" class="AppBundle\EventListener\PrePersistEventListener">
-            <tag name="doctrine.event_listener" event="prePersist" method="onPrePersist" />
+        <service id="app.post_persist_listener" class="AppBundle\EventListener\PostPersistEventListener">
+            <tag name="doctrine.event_listener" event="postPersist" method="postPersist" />
+            <argument type="service" id="logger" />
         </service>
 
         <service id="app.pre_update_listener" class="AppBundle\EventListener\PreUpdateEventListener">
-            <tag name="doctrine.event_listener" event="preUpdate" method="onPreUpdate" />
+            <tag name="doctrine.event_listener" event="preUpdate" method="preUpdate" />
+            <argument type="service" id="logger" />
         </service>
 
-        <service id="app.pre_remove_listener" class="AppBundle\EventListener\PreRemoveEventListener">
-            <tag name="doctrine.event_listener" event="preRemove" method="onPreRemove" />
+        <service id="app.post_remove_listener" class="AppBundle\EventListener\PostRemoveEventListener">
+            <tag name="doctrine.event_listener" event="postRemove" method="postRemove" />
+            <argument type="service" id="logger" />
         </service>
     </services>
 </container>
