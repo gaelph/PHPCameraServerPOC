@@ -23,9 +23,9 @@ class PhotoController extends FOSRestController implements TokenAuthtentifiedCon
      * @Rest\Get("/photos")
      */
     function getPhotosAction(Request $request) {
-        $manager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Photo');
+        $repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Photo');
 
-        $responseBody = $manager->findBy(['user' => $request->attributes->get('user')]);
+        $responseBody = $repository->findBy(['user' => $request->attributes->get('user')]);
 
         // Envoi de la "vue"
         $view = View::create($responseBody, 200);
@@ -43,9 +43,9 @@ class PhotoController extends FOSRestController implements TokenAuthtentifiedCon
      * @Rest\Get("/photos/{key}")
      */
     function getPhotoAction(Request $request, $key) {
-        $manager = $this->getDoctrine()->getManager()->getRepository('AppBundle:Photo');
+        $repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Photo');
 
-        $responseBody = $manager->findOneBy([
+        $responseBody = $repository->findOneBy([
             'key' => $key,
             'user' => $request->attributes->get('user')
         ]);
@@ -72,9 +72,9 @@ class PhotoController extends FOSRestController implements TokenAuthtentifiedCon
 
         $photo = new Photo();
 
-        $filepath = getcwd() . '/uploads/' . $key . '.jpg';
+        $filePath = getcwd() . '/uploads/' . $key . '.jpg';
 
-        $pathToStore = $this->base64ToJpeg($content['value'], $filepath);
+        $pathToStore = $this->base64ToJpeg($content['value'], $filePath);
 
         $this->value = '/uploads/' . $key . '.jpg';
 
