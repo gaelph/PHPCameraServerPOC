@@ -9,3 +9,7 @@ users:
 photos:
     type:   rest
     resource: Appbundle\Controller\PhotoController
+
+testcases:
+    type:   rest
+    resource: AppBundle\Controller\TestCaseController
