@@ -74,12 +74,10 @@ class PhotoController extends FOSRestController implements TokenAuthtentifiedCon
 
         $filePath = getcwd() . '/uploads/' . $key . '.jpg';
 
-        $pathToStore = $this->base64ToJpeg($content['value'], $filePath);
-
-        $this->value = '/uploads/' . $key . '.jpg';
+        $this->base64ToJpeg($content['value'], $filePath);
 
         $photo->setKey($content['key']);
-        $photo->setValue($pathToStore);
+        $photo->setValue('uploads/' . $key . '.jpg');
         $photo->setUser($request->attributes->get('user'));
         $photo->setTimestamp(time());
 
@@ -142,6 +140,7 @@ class PhotoController extends FOSRestController implements TokenAuthtentifiedCon
      * @Rest\Delete("/photos/{key}")
      */
     function deletePhotoAction(Request $request, $key) {
+        $logger = $this->get('logger');
         $manager = $this->getDoctrine()->getManager();
         $repo = $manager->getRepository('AppBundle:Photo');
         $status = 204;
@@ -150,13 +149,32 @@ class PhotoController extends FOSRestController implements TokenAuthtentifiedCon
             'key' => $key,
             'user' => $request->attributes->get('user')
         ])) {
+            $photo->setTimestamp(time());
             $manager->remove($photo);
+            $manager->flush();
         } else {
             $status = 404;
         }
 
         // Envoi de la "vue"
         $view = View::create(null, $status);
+        $viewHandler = $this->get('fos_rest.view_handler');
+
+        $view->setFormat('json');
+
+        return $viewHandler->handle($view);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @Rest\Options("/photos");
+     * @Rest\Options("/photos/{key}");
+     * @Rest\View()
+     */
+    function optionsPhotosAction(Request $request, $key) {
+        // Envoi de la "vue"
+        $view = View::create(null, 200);
         $viewHandler = $this->get('fos_rest.view_handler');
 
         $view->setFormat('json');

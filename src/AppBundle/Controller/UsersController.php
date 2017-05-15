@@ -54,7 +54,7 @@ class UsersController extends FOSRestController implements TokenAuthtentifiedCon
      * @param $user
      * @return mixed
      *
-     * @RESt\Post("/users/authenticate")
+     * @Rest\Post("/users/authenticate")
      * @Rest\View()
      */
     public function authenticateUsersAction() {
@@ -97,6 +97,23 @@ class UsersController extends FOSRestController implements TokenAuthtentifiedCon
 
         // Envoi de la "vue"
         $view = View::create($responseBody, 200);
+        $viewHandler = $this->get('fos_rest.view_handler');
+
+        $view->setFormat('json');
+
+        return $viewHandler->handle($view);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @Rest\Options("/users");
+     * @Rest\Options("/users/{key}");
+     * @Rest\View()
+     */
+    function optionsUsersAction(Request $request, $key) {
+        // Envoi de la "vue"
+        $view = View::create(null, 200);
         $viewHandler = $this->get('fos_rest.view_handler');
 
         $view->setFormat('json');

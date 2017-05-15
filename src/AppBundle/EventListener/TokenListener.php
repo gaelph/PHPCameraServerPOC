@@ -27,6 +27,10 @@ class TokenListener
             return;
         }
 
+        if ($event->getRequest()->getMethod() === 'OPTIONS') {
+            return;
+        }
+
         if ($controller[0] instanceof TokenAuthtentifiedController && $event->getRequest()->getPathInfo() !== '/users/authenticate') {
             $token = $event->getRequest()->headers->get('x_access_token');
             if (!$token) {
