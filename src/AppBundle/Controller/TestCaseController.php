@@ -20,7 +20,7 @@ class TestCaseController extends FOSRestController implements TokenAuthtentified
 {
     /**
      * @param Request $request
-     * @param $slug
+     * @param $id
      *
      * @Rest\Get("/testcases/{id}")
      * @Rest\View()
@@ -71,11 +71,11 @@ class TestCaseController extends FOSRestController implements TokenAuthtentified
         $testCaseObject = $request->request->all();
 
         $testCase = new TestCase();
-        $testCase->setNom($testCaseObject['nom']);
-        $testCase->setDescription($testCaseObject['description']);
-        $testCase->setNumero($testCaseObject['numero']);
-        $testCase->setDate($testCaseObject['date']);
-        $testCase->setTimestamp(time());
+        $testCase
+            ->setNom($testCaseObject['nom'])
+            ->setDescription($testCaseObject['description'])
+            ->setNumero($testCaseObject['numero'])
+            ->setDate($testCaseObject['date']);
 
         $manager->persist($testCase);
         $manager->flush();
@@ -91,7 +91,7 @@ class TestCaseController extends FOSRestController implements TokenAuthtentified
 
     /**
      * @param Request $request
-     * @param $slug
+     * @param $id
      *
      * @Rest\Put("/testcases/{id}")
      * @Rest\View()
@@ -105,17 +105,31 @@ class TestCaseController extends FOSRestController implements TokenAuthtentified
             $status = 200;
 
             $testCaseObject = $request->request->all();
-            $testCase->setNom($testCaseObject['nom']);
-            $testCase->setDescription($testCaseObject['description']);
-            $testCase->setNumero($testCaseObject['numero']);
-            $testCase->setDate($testCaseObject['date']);
-            $testCase->setTimestamp($testCaseObject['timestamp']);
+
+            $modifs = json_decode($testCaseObject['modifications'], true);
+
+            if (!is_array($modifs)) {
+                $modifs = [];
+            }
+
+            $testCase->setModifications($modifs);
+
+            foreach ($testCaseObject as $key => $value) {
+                $setter = 'set' . ucfirst($key);
+                if ($key !== 'modifications') {
+                    $testCase->{$setter}($value);
+                }
+            }
+
+            $logger = $this->get('logger');
+            $logger->info(json_encode($testCase));
 
             $manager->flush();
+
+            $testCase = $repo->find($testCase->getId());
         } else {
             $testCase = null;
         }
-
 
         // Envoi de la "vue"
         $view = View::create($testCase, $status);
