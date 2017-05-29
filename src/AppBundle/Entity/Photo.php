@@ -37,17 +37,24 @@ class Photo
     /**
      * @var integer
      *
-     * @ORM\Column(name="timestamp", type="integer")
+     * @ORM\Column(name="modifications", type="text", nullable=true)
      */
-    private $timestamp;
+    private $modifications = "{}";
 
     /**
      * Set key
      *
      * @param int $key
+     * @return Photo
      */
     public function setKey($key) {
         $this->key = $key;
+
+        $modifications = $this->getModifications();
+        $modifications["key"] = time();
+        $this->setModifications($modifications);
+
+        return $this;
     }
 
 
@@ -61,6 +68,14 @@ class Photo
         return $this->key;
     }
 
+    public function setId($id) {
+        $this->setKey($id);
+    }
+
+    public function getId() {
+        return $this->getKey();
+    }
+
     /**
      * Set value
      *
@@ -71,6 +86,10 @@ class Photo
     public function setValue($value)
     {
         $this->value = $value;
+
+        $modifications = $this->getModifications();
+        $modifications["value"] = time();
+        $this->setModifications($modifications);
 
         return $this;
     }
@@ -96,6 +115,10 @@ class Photo
     {
         $this->user = $user;
 
+        $modifications = $this->getModifications();
+        $modifications["user"] = time();
+        $this->setModifications($modifications);
+
         return $this;
     }
 
@@ -110,27 +133,21 @@ class Photo
     }
 
     /**
-     * Set timestamp
-     *
-     * @param integer $timestamp
-     *
-     * @return Photo
+     * @return string
      */
-    public function setTimestamp($timestamp)
+    public function getModifications()
     {
-        $this->timestamp = $timestamp;
-
-        return $this;
+        return json_decode($this->modifications, true);
     }
 
     /**
-     * Get timestamp
-     *
-     * @return integer
+     * @param string $modifications
      */
-    public function getTimestamp()
+    public function setModifications($modifications)
     {
-        return $this->timestamp;
+        $this->modifications = json_encode($modifications);
     }
+
+
 }
 
