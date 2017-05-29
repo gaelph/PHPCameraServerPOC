@@ -15,9 +15,15 @@ use FOS\RestBundle\View\View;
 use AppBundle\Entity\Photo;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Class PhotoController
+ *
+ * @package AppBundle\Controller
+ */
 class PhotoController extends FOSRestController implements TokenAuthtentifiedController
 {
     /**
+     * Renvoies toutes les photos
      * @param Request $request
      * @Rest\View()
      * @Rest\Get("/photos")
@@ -37,8 +43,9 @@ class PhotoController extends FOSRestController implements TokenAuthtentifiedCon
     }
 
     /**
+     * Renvoie la photo pour un idnetifiant perticulier
      * @param Request $request
-     * @param $key
+     * @param mixed $key              l'identifiant de la photo
      * @Rest\View()
      * @Rest\Get("/photos/{key}")
      */
@@ -60,6 +67,7 @@ class PhotoController extends FOSRestController implements TokenAuthtentifiedCon
     }
 
     /**
+     * Ajoute une nouvelle photo
      * @param Request $request
      * @Rest\View()
      * @Rest\Post("/photos")
@@ -76,10 +84,9 @@ class PhotoController extends FOSRestController implements TokenAuthtentifiedCon
 
         $this->base64ToJpeg($content['value'], $filePath);
 
-        $photo->setKey($content['key']);
-        $photo->setValue('uploads/' . $key . '.jpg');
-        $photo->setUser($request->attributes->get('user'));
-        $photo->setTimestamp(time());
+        $photo->setKey($content['key'])
+            ->setValue('uploads/' . $key . '.jpg')
+            ->setUser($request->attributes->get('user'));
 
         $manager->persist($photo);
         $manager->flush();
@@ -94,8 +101,9 @@ class PhotoController extends FOSRestController implements TokenAuthtentifiedCon
     }
 
     /**
+     * Mets à jour une photo
      * @param Request $request
-     * @param $key
+     * @param mixed $key                 L'identifiant de la photo
      *
      * @Rest\View()
      * @Rest\Put("/photos/{key}")
@@ -112,10 +120,9 @@ class PhotoController extends FOSRestController implements TokenAuthtentifiedCon
             'key' => $key,
             'user' => $request->attributes->get('user')
         ])) {
-            $photo->setKey($content['key']);
-            $photo->setValue($content['value']);
-            $photo->setUser($request->attributes->get('user'));
-            $photo->setTimestamp(time());
+            $photo->setKey($content['key'])
+                ->setValue($content['value'])
+                ->setUser($request->attributes->get('user'));
 
             $manager->flush();
         } else {
@@ -134,8 +141,9 @@ class PhotoController extends FOSRestController implements TokenAuthtentifiedCon
     }
 
     /**
+     * Supprime une photo
      * @param Request $request
-     * @param $key
+     * @param mixed $key              L'idnetifiant de la photo
      * @Rest\View()
      * @Rest\Delete("/photos/{key}")
      */
@@ -149,7 +157,7 @@ class PhotoController extends FOSRestController implements TokenAuthtentifiedCon
             'key' => $key,
             'user' => $request->attributes->get('user')
         ])) {
-            $photo->setTimestamp(time());
+            unlink(getcwd() . DIRECTORY_SEPARATOR . $photo->getValue());
             $manager->remove($photo);
             $manager->flush();
         } else {
@@ -166,6 +174,7 @@ class PhotoController extends FOSRestController implements TokenAuthtentifiedCon
     }
 
     /**
+     * Réponse à une requête OPTIONS
      * @param Request $request
      *
      * @Rest\Options("/photos");
@@ -183,6 +192,7 @@ class PhotoController extends FOSRestController implements TokenAuthtentifiedCon
     }
 
     /**
+     * Écrit un fichier image à partir de la chaîne base64
      * @param string $base64_string
      * @param string $output_file
      * @return mixed
