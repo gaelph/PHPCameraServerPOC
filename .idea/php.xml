@@ -2,7 +2,11 @@
 <project version="4">
   <component name="PhpProjectServersManager">
     <servers>
-      <server host="localhost" id="50be114b-397a-4d3d-9599-fc6a93c74831" name="Localhost" />
+      <server host="localhost" id="50be114b-397a-4d3d-9599-fc6a93c74831" name="Localhost" use_path_mappings="true">
+        <path_mappings>
+          <mapping local-root="$PROJECT_DIR$" remote-root="/Users/gaelph/Sites/PHPCameraServerPOC" />
+        </path_mappings>
+      </server>
     </servers>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.1" />
