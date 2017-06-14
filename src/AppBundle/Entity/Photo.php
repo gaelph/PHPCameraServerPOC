@@ -15,8 +15,9 @@ class Photo
     /**
      * @var integer
      *
-     * @ORM\Column(name="key", type="integer")
      * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(name="key", type="integer")
      */
     private $key;
 
